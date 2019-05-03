@@ -4,7 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "build": "webpack"
+    "prod": "yarn webpack --env.mode production",
+    "dev": "yarn webpack --env.mode development",
+    "debug": "node --inspect --inspect-brk ./app.js"
   },
   "keywords": [],
   "author": "",

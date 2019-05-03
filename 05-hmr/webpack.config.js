@@ -14,7 +14,7 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new CleanWebpackPlugin({cleanOnceBeforeBuildPatterns:['dist']}),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'HMR'
     }),
