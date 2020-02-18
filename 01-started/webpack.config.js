@@ -3,6 +3,12 @@ const MyFirstPlugin = require('./MyFirstPlugin');
 
 module.exports = {
   entry: './src/index.js',
+  watch:true,
+  watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000,
+    ignored: /node_modules/
+  },
   mode: 'development',
   output: {
     filename: 'main.js',
