@@ -1,0 +1,23 @@
+{
+  "name": "webpack-demos-4.x-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanlee26/webpack-demos-4.x-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yanlee26/webpack-demos-4.x-/issues"
+  },
+  "homepage": "https://github.com/yanlee26/webpack-demos-4.x-#readme",
+  "devDependencies": {
+    "tapable": "^1.1.3"
+  }
+}
