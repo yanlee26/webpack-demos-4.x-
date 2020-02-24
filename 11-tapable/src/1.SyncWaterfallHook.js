@@ -1,8 +1,27 @@
-// 上一个监听函数的返回值可以传给下一个监听函数
-
 const {
     SyncWaterfallHook
 } = require("tapable");
+
+// 同步串行：上一个监听函数的返回值可以传给下一个监听函数，类似 promise resolve
+class SyncWaterfallHook_MY{
+    constructor(){
+        this.hooks = [];
+    }
+    
+    // 订阅
+    tap(name, fn){
+        this.hooks.push(fn);
+    }
+
+    // 发布
+    call(){
+        let result = null;
+        for(let i = 0, l = this.hooks.length; i < l; i++) {
+            let hook = this.hooks[i];
+            result = i == 0 ? hook(...arguments): hook(result); 
+        }
+    }
+}
 
 let queue = new SyncWaterfallHook(['name']);
 
@@ -27,24 +46,3 @@ webpack 1
 1 2
 2 3
 */
-
-class SyncWaterfallHook_MY{
-    constructor(){
-        this.hooks = [];
-    }
-    
-    // 订阅
-    tap(name, fn){
-        this.hooks.push(fn);
-    }
-
-    // 发布
-    call(){
-        let result = null;
-        for(let i = 0, l = this.hooks.length; i < l; i++) {
-            let hook = this.hooks[i];
-            result = i == 0 ? hook(...arguments): hook(result); 
-        }
-    }
-}
-

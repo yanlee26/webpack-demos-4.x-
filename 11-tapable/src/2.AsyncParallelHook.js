@@ -2,6 +2,10 @@ const {
     AsyncParallelHook
 } = require("tapable");
 
+/**异步并发：
+ * 不关心监听函数的返回值
+*/
+
 let queue1 = new AsyncParallelHook(['name']);
 console.time('cost');
 queue1.tap('1', function (name) {
@@ -13,9 +17,9 @@ queue1.tap('2', function (name) {
 queue1.tap('3', function (name) {
     console.log(name, 3);
 });
-queue1.callAsync('webpack', err => {
-    console.timeEnd('cost');
-});
+// queue1.callAsync('webpack', err => {
+//     console.timeEnd('cost');
+// });
 
 // 执行结果
 /* 
@@ -46,10 +50,10 @@ queue2.tapAsync('3', function (name, cb) {
     }, 3000);
 });
 
-queue2.callAsync('webpack', () => {
-    console.log('over');
-    console.timeEnd('cost1');
-});
+// queue2.callAsync('webpack', () => {
+//     console.log('over');
+//     console.timeEnd('cost1');
+// });
 
 // 执行结果
 /* 

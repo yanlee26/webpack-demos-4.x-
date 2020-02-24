@@ -1,26 +1,30 @@
-// callback()的参数不为null，就会直接执行callAsync等触发函数绑定的回调函数
 
 const {
     AsyncSeriesBailHook
 } = require("tapable");
+
+/**异步串行：
+callback()的参数不为 null，就会直接执行 callAsync 等触发函数绑定的回调函数
+**/ 
 
 // tap
 let queue1 = new AsyncSeriesBailHook(['name']);
 console.time('cost1');
 queue1.tap('1', function (name) {
     console.log(1);
-    return "Wrong";
+    // return "Wrong";
 });
 queue1.tap('2', function (name) {
     console.log(2);
+    return 2
 });
 queue1.tap('3', function (name) {
     console.log(3);
 });
-queue1.callAsync('webpack', err => {
-    console.log(err);
-    console.timeEnd('cost1');
-});
+// queue1.callAsync('webpack', err => {
+//     console.log('err',err);
+//     console.timeEnd('cost1');
+// });
 
 // 执行结果:
 /* 
@@ -48,11 +52,11 @@ queue2.tapAsync('3', function (name, callback) {
         callback();
     }, 3000)
 });
-queue2.callAsync('webpack', err => {
-    console.log(err);
-    console.log('over');
-    console.timeEnd('cost2');
-});
+// queue2.callAsync('webpack', err => {
+//     console.log('err',err);
+//     console.log('over');
+//     console.timeEnd('cost2');
+// });
 // 执行结果
 
 /* 
@@ -88,15 +92,15 @@ queue3.tapPromise('3', function (name, callback) {
         }, 3000)
     });
 });
-queue3.promise('webpack').then(err => {
-    console.log(err);
-    console.log('over');
-    console.timeEnd('cost3');
-}, err => {
-    console.log(err);
-    console.log('error');
-    console.timeEnd('cost3');
-});
+// queue3.promise('webpack').then(err => {
+//     console.log(err);
+//     console.log('over');
+//     console.timeEnd('cost3');
+// }, err => {
+//     console.log(err);
+//     console.log('error');
+//     console.timeEnd('cost3');
+// });
 // 执行结果：
 /* 
 webpack 1

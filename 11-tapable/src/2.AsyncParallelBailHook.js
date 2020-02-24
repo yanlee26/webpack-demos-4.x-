@@ -1,4 +1,11 @@
-// 只要监听函数的返回值不为 null，就会忽略后面的监听函数执行，直接跳跃到callAsync等触发函数绑定的回调函数，然后执行这个被绑定的回调函数。
+const {
+    AsyncParallelBailHook
+} = require("tapable");
+/**异步并发：
+ * 只要监听函数的返回值不为 null，就会忽略后面的监听函数执行，
+ * 直接跳跃到 callAsync 等触发函数绑定的回调函数，然后执行这个被绑定的回调函数。
+ **/ 
+
 let queue1 = new AsyncParallelBailHook(['name']);
 console.time('cost');
 queue1.tap('1', function (name) {
@@ -11,9 +18,9 @@ queue1.tap('2', function (name) {
 queue1.tap('3', function (name) {
     console.log(name, 3);
 });
-queue1.callAsync('webpack', err => {
-    console.timeEnd('cost');
-});
+// queue1.callAsync('webpack', err => {
+//     console.timeEnd('cost');
+// });
 // 执行结果:
 /* 
 webpack 1
@@ -43,16 +50,24 @@ queue2.tapAsync('3', function (name, cb) {
     }, 3000);
 });
 
-queue2.callAsync('webpack', () => {
-    console.log('over');
-    console.timeEnd('cost1');
-});
+// queue2.callAsync('webpack', () => {
+//     // 执行结束后的回调
+//     console.log('over');
+//     console.timeEnd('cost1');
+// });
 
 // 执行结果:
 /* 
 webpack 1
 webpack 2
 webpack 3
+
+// or 
+webpack 1
+webpack 2
+webpack 3
+over
+cost1: 3.005s
 */
 let queue3 = new AsyncParallelBailHook(['name']);
 console.time('cost3');

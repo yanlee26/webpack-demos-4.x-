@@ -2,7 +2,35 @@ const {
     AsyncSeriesHook
 } = require("tapable");
 
-// tap
+/**异步串行
+ * 不关心callback()的参数
+ **/ 
+
+class AsyncSeriesHook_MY {
+    constructor() {
+        this.hooks = [];
+    }
+
+    tapAsync(name, fn) {
+        this.hooks.push(fn);
+    }
+
+    callAsync() {
+        var slef = this;
+        var args = Array.from(arguments);
+        let done = args.pop();
+        let idx = 0;
+
+        function next(err) {
+            // 如果 next 的参数有值，就直接跳跃到 执行 callAsync 的回调函数
+            if (err) return done(err);
+            let fn = slef.hooks[idx++];
+            fn ? fn(...args, next) : done();
+        }
+        next();
+    }
+}
+
 let queue1 = new AsyncSeriesHook(['name']);
 console.time('cost1');
 queue1.tap('1', function (name) {
@@ -101,28 +129,3 @@ webapck 3
 undefined
 cost3: 6021.817ms
 */
-
-class AsyncSeriesHook_MY {
-    constructor() {
-        this.hooks = [];
-    }
-
-    tapAsync(name, fn) {
-        this.hooks.push(fn);
-    }
-
-    callAsync() {
-        var slef = this;
-        var args = Array.from(arguments);
-        let done = args.pop();
-        let idx = 0;
-
-        function next(err) {
-            // 如果next的参数有值，就直接跳跃到 执行callAsync的回调函数
-            if (err) return done(err);
-            let fn = slef.hooks[idx++];
-            fn ? fn(...args, next) : done();
-        }
-        next();
-    }
-}

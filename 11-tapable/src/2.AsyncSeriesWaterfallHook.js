@@ -1,10 +1,47 @@
-// 上一个监听函数的中的callback(err, data)的第二个参数,可以作为下一个监听函数的参数
-
 const {
     AsyncSeriesWaterfallHook
 } = require("tapable");
 
-// tap
+/**异步串行:
+上一个监听函数的中的 callback(err, data) 的第二个参数, 
+可以作为下一个监听函数的参数
+**/ 
+
+class AsyncSeriesWaterfallHook_MY {
+    constructor() {
+        this.hooks = [];
+    }
+
+    tapAsync(name, fn) {
+        this.hooks.push(fn);
+    }
+
+    callAsync() {
+        let self = this;
+        var args = Array.from(arguments);
+
+        let done = args.pop();
+        console.log(args);
+        let idx = 0;
+        let result = null;
+
+        function next(err, data) {
+            if (idx >= self.hooks.length) return done();
+            if (err) {
+                return done(err);
+            }
+            let fn = self.hooks[idx++];
+            if (idx == 1) {
+
+                fn(...args, next);
+            } else {
+                fn(data, next);
+            }
+        }
+        next();
+    }
+}
+
 let queue1 = new AsyncSeriesWaterfallHook(['name']);
 console.time('cost1');
 queue1.tap('1', function (name) {
@@ -108,37 +145,4 @@ queue3.promise('webpack').then(err => {
 over
 cost3: 6016.703ms
 */
-class AsyncSeriesWaterfallHook_MY {
-    constructor() {
-        this.hooks = [];
-    }
 
-    tapAsync(name, fn) {
-        this.hooks.push(fn);
-    }
-
-    callAsync() {
-        let self = this;
-        var args = Array.from(arguments);
-
-        let done = args.pop();
-        console.log(args);
-        let idx = 0;
-        let result = null;
-
-        function next(err, data) {
-            if (idx >= self.hooks.length) return done();
-            if (err) {
-                return done(err);
-            }
-            let fn = self.hooks[idx++];
-            if (idx == 1) {
-
-                fn(...args, next);
-            } else {
-                fn(data, next);
-            }
-        }
-        next();
-    }
-}
